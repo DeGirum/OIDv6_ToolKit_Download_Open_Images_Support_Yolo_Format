@@ -65,12 +65,10 @@ def download_img(folder, dataset_dir, class_name, images_list, threads, args):
     '''
     image_dir = folder
     
-    download_dir = os.path.join(dataset_dir, image_dir, class_name )
+    download_dir = os.path.join(dataset_dir, image_dir, class_name, 'images')
+    if not os.path.exists(download_dir):
+        os.makedirs(download_dir)
 
-    if args.multiclasses=='0' and not os.path.exists(download_dir+"/images"):
-        os.makedirs(download_dir+"/images")
-        download_dir += "/images"
-   
     downloaded_images_list = [f.split('.')[0] for f in os.listdir(download_dir)]
     images_list = list(set(images_list) - set(downloaded_images_list))
 
@@ -116,15 +114,17 @@ def get_label(folder, dataset_dir, class_name, class_code, df_val, class_list, a
 
 
         if args.multiclasses=='1':
-            download_dir = os.path.join(dataset_dir, image_dir, class_list)
-            label_dir = os.path.join(dataset_dir, folder, class_list)
-
+            download_dir = os.path.join(dataset_dir, image_dir, class_list, 'images')
+            label_dir = os.path.join(dataset_dir, folder, class_list, 'labels')
         else:
             download_dir = os.path.join(dataset_dir, image_dir, class_name, 'images')
             label_dir = os.path.join(dataset_dir, folder, class_name, 'labels')
         
         if not os.path.exists(label_dir):
             os.makedirs(label_dir)
+
+        if not os.path.exists(download_dir):
+            os.makedirs(download_dir)
    
 
         downloaded_images_list = [f.split('.')[0] for f in os.listdir(download_dir) if f.endswith('.jpg')]
